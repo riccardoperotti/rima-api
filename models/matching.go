@@ -20,15 +20,15 @@ var anyConsonant = fmt.Sprintf("(:?(:?%s)|%s)", consonantComplex, consonantSimpl
 // Compiled regexes
 var startsWithConsonants = regexp.MustCompile(`^` + anyConsonant + `+`)
 
-// sondsFromSilables parses the sound of a silable, which is
+// soundsFromSyllables parses the sound of a syllable, which is
 // basically everything from the first vowel on
-func sondsFromSilables(silables []string) []string {
+func soundsFromSyllables(syllables []string) []string {
 	var sounds []string
-	for _, sil := range silables {
-		if sil == "" {
+	for _, syl := range syllables {
+		if syl == "" {
 			continue
 		}
-		s := startsWithConsonants.ReplaceAllString(sil, "")
+		s := startsWithConsonants.ReplaceAllString(syl, "")
 		sounds = append(sounds, s)
 	}
 	return sounds
@@ -38,29 +38,29 @@ func sondsFromSilables(silables []string) []string {
 // rules of (Spanish) rhyming based on the Word's type
 //
 // TODO: there needs to be a strict/exact mode option where rhymes are not defined by sound,
-// but are instead matched silable by silable.
+// but are instead matched syllable by syllable.
 func buildRimasSearchQuery(w Word) (string, []interface{}) {
 
 	sounds := w.Sounds()
 
-	// In all cases, the last sound, the type and the number of silables should always match:
+	// In all cases, the last sound, the type and the number of syllables should always match:
 	query := "select palabra, rank from lexico where silaba1 like ? and tipo = ? and silabas = ?"
 
 	// bind values must be of type []any
 	bindVals := []interface{}{
 		fmtLike(sounds[len(sounds)-1]),
 		w.Type,
-		fmt.Sprintf("%d", w.SilableCount),
+		fmt.Sprintf("%d", w.SyllableCount),
 	}
 
-	// if Type is G (GRAVE) - accent on the second to last silable,
-	// the sound of the 2nd silable should also match
+	// if Type is G (GRAVE) - accent on the second to last syllable,
+	// the sound of the 2nd syllable should also match
 	if w.Type == "G" {
 		query += " and silaba2 like ?"
 		bindVals = append(bindVals, fmtLike(sounds[len(sounds)-2]))
 	}
 
-	// if Type is E (ESDRUJULA) - accent on the third to last silable,
+	// if Type is E (ESDRUJULA) - accent on the third to last syllable,
 	// the sound of the 2nd AND the 3rd silabas should also match
 	if w.Type == "E" {
 		query += " and silaba2 like ? and silaba3 like ?"

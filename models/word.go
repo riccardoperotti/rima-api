@@ -11,15 +11,15 @@ type WordModel struct{}
 
 // Word represents the a row in the `lexico` table
 type Word struct {
-	Name         string
-	SilableCount int
-	Type         string
-	Silable4     string
-	Silable3     string
-	Silable2     string
-	Silable1     string
-	EndsWith     string
-	Rank         int
+	Name          string
+	SyllableCount int
+	Type          string
+	Syllable4     string
+	Syllable3     string
+	Syllable2     string
+	Syllable1     string
+	EndsWith      string
+	Rank          int
 }
 
 // GetWord fetches this word's complete record from the `lexico` table
@@ -53,12 +53,12 @@ func (wm WordModel) GetWord(dbh *sql.DB, word string) (Word, error) {
 	row := stmt.QueryRowContext(ctx, word)
 	err = row.Scan(
 		&dbW.Name,
-		&dbW.SilableCount,
+		&dbW.SyllableCount,
 		&dbW.Type,
-		&dbW.Silable4,
-		&dbW.Silable3,
-		&dbW.Silable2,
-		&dbW.Silable1,
+		&dbW.Syllable4,
+		&dbW.Syllable3,
+		&dbW.Syllable2,
+		&dbW.Syllable1,
 		&dbW.EndsWith,
 		&dbW.Rank,
 	)
@@ -70,10 +70,10 @@ func (wm WordModel) GetWord(dbh *sql.DB, word string) (Word, error) {
 	return dbW, nil
 }
 
-// Silables returns the non-empty silables of a Word
-func (w Word) Silables() []string {
+// Syllables returns the non-empty syllables of a Word
+func (w Word) Syllables() []string {
 	sil := make([]string, 0)
-	for _, s := range []string{w.Silable4, w.Silable3, w.Silable2, w.Silable1} {
+	for _, s := range []string{w.Syllable4, w.Syllable3, w.Syllable2, w.Syllable1} {
 		if s != "" {
 			sil = append(sil, s)
 		}
@@ -82,5 +82,5 @@ func (w Word) Silables() []string {
 }
 
 func (w Word) Sounds() []string {
-	return sondsFromSilables(w.Silables())
+	return soundsFromSyllables(w.Syllables())
 }

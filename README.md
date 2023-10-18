@@ -10,5 +10,5 @@ A lot of TODOs:
 * Creating a dependencies object to be passed to controllers
 * Add Throttling
 * Add Instrumentation
-* Strict / exact mode where rhymes are matched by exact syllable, not by sound.
+* Strict / exact mode where rhymes are matched syllable by syllable instead of by sound.
 

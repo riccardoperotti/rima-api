@@ -17,10 +17,10 @@ type RimasController struct{}
 
 type Result struct {
 	Word struct {
-		Name     string `json:"name"`
-		Type     string `json:"type"`
-		Silables string `json:"silables"`
-		Sounds   string `json:"sounds"`
+		Name      string `json:"name"`
+		Type      string `json:"type"`
+		Syllables string `json:"syllables"`
+		Sounds    string `json:"sounds"`
 	} `json:"word"`
 	Count int           `json:"count"`
 	Error string        `json:"error"`
@@ -59,7 +59,7 @@ func (r RimasController) GetRimas(c *gin.Context) {
 	}
 
 	// TODO: add more info about the word (analytics, sounds, etc)
-	res.Word.Silables = strings.Join(word.Silables(), "-")
+	res.Word.Syllables = strings.Join(word.Syllables(), "-")
 	res.Word.Sounds = strings.Join(word.Sounds(), "-")
 	res.Word.Type = word.Type
 
