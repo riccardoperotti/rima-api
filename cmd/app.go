@@ -11,11 +11,11 @@ func main() {
 	// TODO: fetch dependencies (db, config, etc) and add them to
 	// each controller instance
 
-	rimas := new(controllers.RimasController)
-	router.GET("/rima/:word", rimas.GetRimas)
+	rhymes := new(controllers.RhymesController)
+	router.GET("/rima/:word", rhymes.GetRhymes)
 
-	sinonimos := new(controllers.SinonimosController)
-	router.GET("/sinonimo/:word", sinonimos.GetSinonimos)
+	synonyms := new(controllers.SynonymsController)
+	router.GET("/sinonimo/:word", synonyms.GetSynonyms)
 
 	router.SetTrustedProxies(nil)
 	router.Run()

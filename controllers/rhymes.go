@@ -12,8 +12,8 @@ import (
 	"github.com/riccardoperotti/rima-api/models"
 )
 
-// RimasController holds methods and dependencies for the Rimas controller
-type RimasController struct{}
+// RhymesController holds methods and dependencies for the Rhymes controller
+type RhymesController struct{}
 
 type Result struct {
 	Word struct {
@@ -22,12 +22,12 @@ type Result struct {
 		Syllables string `json:"syllables"`
 		Sounds    string `json:"sounds"`
 	} `json:"word"`
-	Count int           `json:"count"`
-	Error string        `json:"error"`
-	Rimas []models.Rima `json:"rimas"`
+	Count  int            `json:"count"`
+	Error  string         `json:"error"`
+	Rhymes []models.Rhyme `json:"rhymes"`
 }
 
-func (r RimasController) GetRimas(c *gin.Context) {
+func (r RhymesController) GetRhymes(c *gin.Context) {
 	w := strings.ToLower(c.Param("word"))
 
 	res := Result{}
@@ -36,7 +36,7 @@ func (r RimasController) GetRimas(c *gin.Context) {
 	// connect to the db
 	dbh, err := db.Connect()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to connect. Please try again later."})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo establecer una conexión. Por favor inténtelo más tarde."})
 		log.Printf("Error connecting to DB: %s", err)
 		return
 	}
@@ -63,10 +63,10 @@ func (r RimasController) GetRimas(c *gin.Context) {
 	res.Word.Sounds = strings.Join(word.Sounds(), "-")
 	res.Word.Type = word.Type
 
-	// get rimas for this word
-	var rimasModel = new(models.RimasModel)
+	// get rhymes for this word
+	var rhymeModel = new(models.RhymeModel)
 
-	rimas, err := rimasModel.GetRimas(dbh, word)
+	rhymes, err := rhymeModel.GetRhymes(dbh, word)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			res.Error = fmt.Sprintf("No se encontraron rimas para la palabra '%s'.", w)
@@ -74,14 +74,14 @@ func (r RimasController) GetRimas(c *gin.Context) {
 			return
 		}
 
-		log.Printf("Error fetching rimas: %s.", err)
+		log.Printf("Error fetching rhymes: %s.", err)
 		res.Error = err.Error()
 		c.JSON(http.StatusInternalServerError, res)
 		return
 	}
 
-	res.Rimas = rimas
-	res.Count = len(rimas)
+	res.Rhymes = rhymes
+	res.Count = len(rhymes)
 
 	c.IndentedJSON(http.StatusOK, res)
 }

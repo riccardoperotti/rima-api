@@ -34,12 +34,12 @@ func soundsFromSyllables(syllables []string) []string {
 	return sounds
 }
 
-// buildRimasSearchQuery builds the sql query and bind values array following
+// buildRhymesSearchQuery builds the sql query and bind values array following
 // rules of (Spanish) rhyming based on the Word's type
 //
 // TODO: there needs to be a strict/exact mode option where rhymes are not defined by sound,
 // but are instead matched syllable by syllable.
-func buildRimasSearchQuery(w Word) (string, []interface{}) {
+func buildRhymesSearchQuery(w Word) (string, []interface{}) {
 
 	sounds := w.Sounds()
 

@@ -45,7 +45,7 @@ func Test_soundsFromSyllables(t *testing.T) {
 
 }
 
-func Test_buildRimasSearchQuery(t *testing.T) {
+func Test_buildRhymesSearchQuery(t *testing.T) {
 
 	agudaQ := "select palabra, rank from lexico where silaba1 like ? and tipo = ? and silabas = ?"
 	graveQ := agudaQ + " and silaba2 like ?"
@@ -109,10 +109,10 @@ func Test_buildRimasSearchQuery(t *testing.T) {
 		t.Run(fmt.Sprintf("%d: %s", i, test.word.Name), func(t *testing.T) {
 			t.Parallel()
 
-			q, bv := buildRimasSearchQuery(test.word)
+			q, bv := buildRhymesSearchQuery(test.word)
 
-			assert.Equal(t, q, test.query, "query from buildRimasSearchQuery should be what we expect")
-			assert.Equal(t, bv, test.bindVals, "bindValues from buildRimasSearchQuery should be what we expect")
+			assert.Equal(t, q, test.query, "query from buildRhymesSearchQuery should be what we expect")
+			assert.Equal(t, bv, test.bindVals, "bindValues from buildRhymesSearchQuery should be what we expect")
 		})
 	}
 

@@ -72,13 +72,13 @@ func (wm WordModel) GetWord(dbh *sql.DB, word string) (Word, error) {
 
 // Syllables returns the non-empty syllables of a Word
 func (w Word) Syllables() []string {
-	sil := make([]string, 0)
+	sylls := make([]string, 0)
 	for _, s := range []string{w.Syllable4, w.Syllable3, w.Syllable2, w.Syllable1} {
 		if s != "" {
-			sil = append(sil, s)
+			sylls = append(sylls, s)
 		}
 	}
-	return sil
+	return sylls
 }
 
 func (w Word) Sounds() []string {
