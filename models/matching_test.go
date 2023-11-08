@@ -59,7 +59,7 @@ func Test_buildRhymesSearchQuery(t *testing.T) {
 	}{
 		{
 			word: Word{
-				Name:          "península",
+				Word:          "península",
 				SyllableCount: 4,
 				Type:          "E",
 				Syllable4:     "pe",
@@ -74,7 +74,7 @@ func Test_buildRhymesSearchQuery(t *testing.T) {
 		},
 		{
 			word: Word{
-				Name:          "tanque",
+				Word:          "tanque",
 				SyllableCount: 2,
 				Type:          "G",
 				Syllable4:     "",
@@ -89,7 +89,7 @@ func Test_buildRhymesSearchQuery(t *testing.T) {
 		},
 		{
 			word: Word{
-				Name:          "serás",
+				Word:          "serás",
 				SyllableCount: 2,
 				Type:          "A",
 				Syllable4:     "",
@@ -106,7 +106,7 @@ func Test_buildRhymesSearchQuery(t *testing.T) {
 
 	for i, test := range cases {
 		test := test
-		t.Run(fmt.Sprintf("%d: %s", i, test.word.Name), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%d: %s", i, test.word.Word), func(t *testing.T) {
 			t.Parallel()
 
 			q, bv := buildRhymesSearchQuery(test.word)

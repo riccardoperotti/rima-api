@@ -2,9 +2,10 @@ package models
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type RhymeModel struct{}
@@ -17,7 +18,7 @@ type Rhyme struct {
 }
 
 // GetRhymes gets the available rhymes for the passed word DB record
-func (rm RhymeModel) GetRhymes(dbh *sql.DB, word Word) ([]Rhyme, error) {
+func (rm RhymeModel) GetRhymes(db *gorm.DB, word Word) ([]Rhyme, error) {
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
@@ -26,7 +27,8 @@ func (rm RhymeModel) GetRhymes(dbh *sql.DB, word Word) ([]Rhyme, error) {
 
 	rhymes := make([]Rhyme, 0)
 
-	rows, err := dbh.QueryContext(ctx, query, bindVals...)
+
+	rows, err := db.Raw(query, bindVals...).WithContext(ctx).Rows()
 	if err != nil {
 		log.Fatal(err)
 		return rhymes, err

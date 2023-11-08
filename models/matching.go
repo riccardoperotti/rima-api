@@ -69,7 +69,7 @@ func buildRhymesSearchQuery(w Word) (string, []interface{}) {
 
 	// and, of course, do not include the word we're trying to match!
 	query += " and word != ?"
-	bindVals = append(bindVals, w.Name)
+	bindVals = append(bindVals, w.Word)
 
 	return query, bindVals
 }

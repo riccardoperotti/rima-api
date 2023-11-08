@@ -1,13 +1,11 @@
 package db
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
 	"log"
-	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // These must come from config:
@@ -19,25 +17,17 @@ const (
 	dbname   = "lexico"
 )
 
-func dsn(dbName string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
+func dsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbname)
 }
 
-func Connect() (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn(dbname))
+func Connect() (*gorm.DB, error) {
+
+	dsn := dsn()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
 	if err != nil {
 		log.Printf("Error when opening DB: %s", err)
-		return nil, err
-	}
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(20)
-	db.SetConnMaxLifetime(time.Minute * 5)
-
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
-	err = db.PingContext(ctx)
-	if err != nil {
-		log.Printf("Errors pinging DB: %s", err)
 		return nil, err
 	}
 

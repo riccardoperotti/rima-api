@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,18 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/riccardoperotti/rima-api/db"
 	"github.com/riccardoperotti/rima-api/models"
+	"gorm.io/gorm"
 )
 
 // RhymesController holds methods and dependencies for the Rhymes controller
 type RhymesController struct{}
 
 type Result struct {
-	Word struct {
-		Name      string `json:"name"`
+	Lookup struct {
+		Word      string `json:"word"`
 		Type      string `json:"type"`
 		Syllables string `json:"syllables"`
 		Sounds    string `json:"sounds"`
-	} `json:"word"`
+	} `json:"lookup"`
 	Count  int            `json:"count"`
 	Error  string         `json:"error"`
 	Rhymes []models.Rhyme `json:"rhymes"`
@@ -38,7 +38,7 @@ func (r RhymesController) GetRhymes(c *gin.Context) {
 	w := strings.ToLower(c.Param("word"))
 
 	res := Result{}
-	res.Word.Name = w
+	res.Lookup.Word = w
 
 	// connect to the db
 	dbh, err := db.Connect()
@@ -47,14 +47,13 @@ func (r RhymesController) GetRhymes(c *gin.Context) {
 		log.Printf("Error connecting to DB: %s", err)
 		return
 	}
-	defer dbh.Close()
 
 	// find this word in the database
 	var wordModel = new(models.WordModel)
 
 	word, err := wordModel.GetWord(dbh, w)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == gorm.ErrRecordNotFound {
 			res.Error = fmt.Sprintf("La palabra '%s' no está en nuestra base de datos.", w)
 			c.IndentedJSON(http.StatusOK, res)
 			return
@@ -65,17 +64,16 @@ func (r RhymesController) GetRhymes(c *gin.Context) {
 		return
 	}
 
-	// TODO: add more info about the word (analytics, sounds, etc)
-	res.Word.Syllables = strings.Join(word.Syllables(), "-")
-	res.Word.Sounds = strings.Join(word.Sounds(), "-")
-	res.Word.Type = TypeStrings[word.Type]
+	res.Lookup.Syllables = strings.Join(word.Syllables(), "-")
+	res.Lookup.Sounds = strings.Join(word.Sounds(), "-")
+	res.Lookup.Type = TypeStrings[word.Type]
 
 	// get rhymes for this word
 	var rhymeModel = new(models.RhymeModel)
 
 	rhymes, err := rhymeModel.GetRhymes(dbh, word)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == gorm.ErrRecordNotFound {
 			res.Error = fmt.Sprintf("No se encontraron rimas para la palabra '%s'.", w)
 			c.IndentedJSON(http.StatusOK, res)
 			return
