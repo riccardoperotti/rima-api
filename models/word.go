@@ -29,17 +29,17 @@ func (wm WordModel) GetWord(dbh *sql.DB, word string) (Word, error) {
 	defer cancelfunc()
 
 	q := `
-		select	palabra,
-				silabas,
-				tipo,
-				COALESCE(silaba4, ""),
-				COALESCE(silaba3, ""),
-				COALESCE(silaba2, ""),
-				COALESCE(silaba1, ""),
-				COALESCE(final, ""),
+		select	word,
+				syllable_count,
+				type,
+				COALESCE(syllable4, ""),
+				COALESCE(syllable3, ""),
+				COALESCE(syllable2, ""),
+				COALESCE(syllable1, ""),
+				COALESCE(ends_with, ""),
 				rank
-		from 	lexico
-		where 	palabra = ?
+		from 	words
+		where 	word = ?
 	`
 
 	stmt, err := dbh.PrepareContext(ctx, q)

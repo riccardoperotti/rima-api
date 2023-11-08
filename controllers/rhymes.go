@@ -27,6 +27,13 @@ type Result struct {
 	Rhymes []models.Rhyme `json:"rhymes"`
 }
 
+var TypeStrings = map[string]string{
+	"A": "Aguda",
+	"G": "Grave",
+	"E": "Esdrújula",
+	"S": "Sobreesdrújula",
+}
+
 func (r RhymesController) GetRhymes(c *gin.Context) {
 	w := strings.ToLower(c.Param("word"))
 
@@ -61,7 +68,7 @@ func (r RhymesController) GetRhymes(c *gin.Context) {
 	// TODO: add more info about the word (analytics, sounds, etc)
 	res.Word.Syllables = strings.Join(word.Syllables(), "-")
 	res.Word.Sounds = strings.Join(word.Sounds(), "-")
-	res.Word.Type = word.Type
+	res.Word.Type = TypeStrings[word.Type]
 
 	// get rhymes for this word
 	var rhymeModel = new(models.RhymeModel)

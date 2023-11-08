@@ -47,10 +47,10 @@ func Test_soundsFromSyllables(t *testing.T) {
 
 func Test_buildRhymesSearchQuery(t *testing.T) {
 
-	agudaQ := "select palabra, rank from lexico where silaba1 like ? and tipo = ? and silabas = ?"
-	graveQ := agudaQ + " and silaba2 like ?"
-	esdrujulaQ := graveQ + " and silaba3 like ?"
-	sufix := " and palabra != ?"
+	agudaQ := "select word, rank from words where syllable1 like ? and type = ? and syllable_count = ?"
+	graveQ := agudaQ + " and syllable2 like ?"
+	esdrujulaQ := graveQ + " and syllable3 like ?"
+	sufix := " and word != ?"
 
 	cases := []struct {
 		word     Word

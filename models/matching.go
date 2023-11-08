@@ -44,7 +44,7 @@ func buildRhymesSearchQuery(w Word) (string, []interface{}) {
 	sounds := w.Sounds()
 
 	// In all cases, the last sound, the type and the number of syllables should always match:
-	query := "select palabra, rank from lexico where silaba1 like ? and tipo = ? and silabas = ?"
+	query := "select word, rank from words where syllable1 like ? and type = ? and syllable_count = ?"
 
 	// bind values must be of type []any
 	bindVals := []interface{}{
@@ -56,19 +56,19 @@ func buildRhymesSearchQuery(w Word) (string, []interface{}) {
 	// if Type is G (GRAVE) - accent on the second to last syllable,
 	// the sound of the 2nd syllable should also match
 	if w.Type == "G" {
-		query += " and silaba2 like ?"
+		query += " and syllable2 like ?"
 		bindVals = append(bindVals, fmtLike(sounds[len(sounds)-2]))
 	}
 
 	// if Type is E (ESDRUJULA) - accent on the third to last syllable,
 	// the sound of the 2nd AND the 3rd silabas should also match
 	if w.Type == "E" {
-		query += " and silaba2 like ? and silaba3 like ?"
+		query += " and syllable2 like ? and syllable3 like ?"
 		bindVals = append(bindVals, fmtLike(sounds[len(sounds)-2]), fmtLike(sounds[len(sounds)-3]))
 	}
 
 	// and, of course, do not include the word we're trying to match!
-	query += " and palabra != ?"
+	query += " and word != ?"
 	bindVals = append(bindVals, w.Name)
 
 	return query, bindVals

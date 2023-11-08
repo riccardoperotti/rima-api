@@ -10,12 +10,13 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// These must come from config:
 // TODO: use some kind of secret management
 const (
-	username = "verso"
-	password = "verso$1"
+	username = "lex"
+	password = "$l3x1c4"
 	hostname = "localhost"
-	dbname   = "verso"
+	dbname   = "lexico"
 )
 
 func dsn(dbName string) string {
